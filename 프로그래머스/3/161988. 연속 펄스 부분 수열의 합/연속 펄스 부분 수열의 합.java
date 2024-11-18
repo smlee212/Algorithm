@@ -2,16 +2,9 @@ import java.util.*;
 
 class Solution {
     
-    /*
-        1. 펄스를 곱한 두 결과는 부호만 다른 결과값이 나옴 
-        2. 부분 수열에 펄스를 곱하는 것이 아니라 기존 수열에 미리 펄스를 곱해놓으면 더 효율적임
-        3. n^2 은 시간초과 / nlogn 도 간당간당..?
-        4. dp는 어떨까?
-    */
-    
     public long solution(int[] sequence) {        
-        // dp[i][0] : i번째 값을 + 했을 때 최대값
-        // dp[i][1] : i번째 값을 - 했을 때 최대값
+        // dp[i][0] : i번째 값을 + 했을 때 (이전 연속 수열에 더하거나, i번째부터 시작하거나)
+        // dp[i][1] : i번째 값을 - 했을 때 (이전 연속 수열에 빼거나, i번째부터 시작하거나)
         long[][] dp = new long[sequence.length][2];      
         dp[0][0] = sequence[0];
         dp[0][1] = -sequence[0];        
