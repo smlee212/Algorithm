@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+
     static int N;
     static int[][] map;
     static int[] dy = {-1, 0, 1, 0},
@@ -33,7 +34,7 @@ public class Main {
         for(int i=0;i<N;i++) {
             for(int j=0;j<N;j++) {
                 if(map[i][j] < 0) {
-                    func2(i, j); 
+                    func2(i, j);
                     func1(i, j, map[i][j], 1);
                 }
             }
@@ -61,37 +62,40 @@ public class Main {
         int myIslandNum = map[y][x];
         int cnt = 1;
 
-        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(o -> o[2]));
+        Deque<int[]> dq = new ArrayDeque<>();
         boolean[][] visited = new boolean[N][N];
 
-        pq.add(new int[]{y, x, cnt});
+        dq.add(new int[]{y, x, cnt});
         visited[y][x] = true;
 
-        while (!pq.isEmpty()) {
-            int[] now = pq.poll();
-            y = now[0];
-            x = now[1];
-            cnt = now[2];
+        Deque<int[]> temp = new ArrayDeque<>();
+        while (!dq.isEmpty()) {
+            while(!dq.isEmpty()) {
+                int[] now = dq.poll();
+                y = now[0];
+                x = now[1];
+                cnt = now[2];
 
-            for(int i=0;i<4;i++) {
-                int ny = y + dy[i];
-                int nx = x + dx[i];
+                for (int j = 0; j < 4; j++) {
+                    int ny = y + dy[j];
+                    int nx = x + dx[j];
 
-                if(ny<0||nx<0||ny>=N||nx>=N||visited[ny][nx]) continue;
+                    if (ny < 0 || nx < 0 || ny >= N || nx >= N || visited[ny][nx]) continue;
 
-                if(map[ny][nx] == myIslandNum) {
-                    visited[ny][nx] = true;
-                    pq.add(new int[]{ny,nx,cnt});
-                }
-                else if(map[ny][nx] == 0) {
-                    visited[ny][nx] = true;
-                    pq.add(new int[]{ny,nx,cnt+1});
-                }
-                else {
-                    minCnt = Math.min(minCnt, cnt-1);
-                    return;
+                    if (map[ny][nx] == myIslandNum) {
+                        visited[ny][nx] = true;
+                        dq.add(new int[]{ny, nx, cnt});
+                    } else if (map[ny][nx] == 0) {
+                        visited[ny][nx] = true;
+                        temp.add(new int[]{ny, nx, cnt + 1});
+                    } else {
+                        minCnt = Math.min(minCnt, cnt - 1);
+                        return;
+                    }
                 }
             }
+            dq = temp;
+            temp = new ArrayDeque<>();
         }
     }
 }
