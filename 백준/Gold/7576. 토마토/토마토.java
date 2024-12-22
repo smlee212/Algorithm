@@ -16,6 +16,7 @@ public class Main {
 
         Deque<int[]> dq = new ArrayDeque<>();
         boolean[][] visited = new boolean[N][M];
+        int tomatoCnt = 0;
 
         for(int i=0;i<N;i++) {
             st = new StringTokenizer(br.readLine());
@@ -25,6 +26,7 @@ public class Main {
                     dq.add(new int[]{i, j});
                     visited[i][j] = true;
                 }
+                if(map[i][j] >= 0) tomatoCnt++;
             }
         }
 
@@ -38,6 +40,7 @@ public class Main {
                 int[] now = dq.poll();
                 int y = now[0];
                 int x = now[1];
+                tomatoCnt--;
 
                 for(int i=0;i<4;i++) {
                     int ny = y + dy[i];
@@ -54,17 +57,6 @@ public class Main {
             }
         }
 
-        boolean isTomato = true;
-        for(int i=0;i<N;i++) {
-            for(int j=0;j<M;j++) {
-                if(map[i][j] == 0) {
-                    isTomato = false;
-                    break;
-                }
-            }
-            if(!isTomato) break;
-        }
-
-        System.out.println(isTomato ? day : -1);
+        System.out.println(tomatoCnt == 0 ? day : -1);
     }
 }
