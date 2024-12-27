@@ -14,17 +14,15 @@ public class Main {
         for(int i=0;i<N;i++) {
             children[i] = Integer.parseInt(st.nextToken());
         }
-        Arrays.sort(children);
 
-        int[] diffHeight = new int[N-1];
+        PriorityQueue<Integer> diffHeight = new PriorityQueue<>();
         for(int i=0;i<N-1;i++) {
-            diffHeight[i] = children[i+1] - children[i];
+            diffHeight.add(children[i+1] - children[i]);
         }
-        Arrays.sort(diffHeight);
         
         int cost = 0;
         for(int i=0;i<N-K;i++) {
-            cost += diffHeight[i];
+            cost += diffHeight.poll();
         }
         System.out.println(cost);
     }
