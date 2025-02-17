@@ -11,10 +11,6 @@ class Solution {
             graph[result[1]][result[0]] = -1;
         }
         
-        // for(int i=1;i<=n;i++) {
-        //     System.out.println(Arrays.toString(graph[i]));
-        // }
-        
         boolean isChange = false;
         boolean[][] visited = new boolean[n+1][n+1];
         while(!isChange) {
@@ -40,11 +36,6 @@ class Solution {
             }
             
         }
-//         System.out.println();
-        
-//         for(int i=1;i<=n;i++) {
-//             System.out.println(Arrays.toString(graph[i]));
-//         }
         
         for(int i=1;i<=n;i++) {
             int cnt = 1;
