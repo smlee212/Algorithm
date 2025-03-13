@@ -29,18 +29,20 @@ public class Main {
     private static int bfs() {
         int[] dy = {1,0,-1,0}, dx = {0,1,0,-1};
 
-        Deque<int[]> dq = new ArrayDeque<>(); // int[] -> [y][x][방문한 칸][부순 벽의 개수]
-        boolean[][][] visited = new boolean[N+1][M+1][K+1];
+        Deque<int[]> dq = new ArrayDeque<>(); // int[] -> [y][x][방문한 칸의 개수]
+        int[][] breakCnt = new int[N+1][M+1]; // 해당 좌표에 벽을 몇번 부수고 도달했는지
+        for(int i=0;i<=N;i++) {
+            Arrays.fill(breakCnt[i], Integer.MAX_VALUE);
+        }
 
-        dq.add(new int[]{1,1,1,0});
-        visited[1][1][0] = true;
+        dq.add(new int[]{1,1,1});
+        breakCnt[1][1] = 0;
 
         while(!dq.isEmpty()) {
             int[] now = dq.poll();
             int y = now[0];
             int x = now[1];
             int cnt = now[2];
-            int k = now[3];
 
             if(y==N&&x==M) {
                 return cnt;
@@ -51,14 +53,11 @@ public class Main {
                 int nx = x + dx[i];
 
                 if(ny<=0||nx<=0||ny>N||nx>M) continue;
+                int nextBreakCnt = breakCnt[y][x] + map[ny][nx];
 
-                if(map[ny][nx] == 0 && !visited[ny][nx][k]) {
-                    visited[ny][nx][k] = true;
-                    dq.add(new int[]{ny,nx,cnt+1,k});
-                }
-                else if(map[ny][nx] == 1 && k+1 <= K && !visited[ny][nx][k+1]){
-                    visited[ny][nx][k+1] = true;
-                    dq.add(new int[]{ny,nx,cnt+1,k+1});
+                if(nextBreakCnt <= K && nextBreakCnt < breakCnt[ny][nx]) {
+                    breakCnt[ny][nx] = nextBreakCnt;
+                    dq.add(new int[]{ny,nx,cnt+1});
                 }
             }
         }
