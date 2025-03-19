@@ -53,6 +53,8 @@ public class Main {
             maxSum = Math.max(maxSum, sum);
             return;
         }
+        // 백트래킹 추가
+        if(1000 * (4-cnt) + sum <= maxSum) return;
 
         // 위, 아래, 오른쪽 3방향에 대해서만 탐색을 진행
         for(int i=0;i<3;i++) {
