@@ -1,51 +1,49 @@
 import java.util.*;
 class Solution {
-    public int[] solution(String[] genres, int[] plays) {
-
-        // 장르별 플레이 횟수
-        HashMap<String, Integer> genres_cnt = new HashMap<>();
-        // 장르별 고유값별로 플레이 횟수
-        HashMap<String, ArrayList<int[]>> genres_playes = new HashMap<>(); // 0번째(고유값), 1번째(플레이 횟수)
-
-        // 값 넣기
-        int size = genres.length;
-        for(int i=0;i<size;i++) {
+    // 12:40
+    
+    public List<Integer> solution(String[] genres, int[] plays) {
+        // 장르별 재생횟수 구하기
+        Map<String, Integer> map1 = new HashMap<>();
+        for(int i=0;i<genres.length;i++) {
             String genre = genres[i];
-            int playCnt = plays[i];
-            genres_cnt.put(genre, genres_cnt.getOrDefault(genre, 0) + playCnt);
-            // 장르가 존재한다면
-            if(genres_playes.containsKey(genre)) {
-                genres_playes.get(genre).add(new int[]{i, playCnt});
-            }
-            // 없다면
-            else {
-                ArrayList<int[]> array = new ArrayList<>();
-                array.add(new int[]{i, playCnt});
-                genres_playes.put(genre, array);
-            }
+            map1.put(genre, map1.getOrDefault(genre, 0) + plays[i]);
         }
-
-        // 정렬
-        List<String> keySet = new ArrayList<>(genres_cnt.keySet());
-        keySet.sort((o1, o2) -> genres_cnt.get(o2).compareTo(genres_cnt.get(o1)));
-
-        ArrayList<Integer> result = new ArrayList<>();
-        for(String key : keySet) {
-            ArrayList<int[]> genre_playes = genres_playes.get(key);
-            genre_playes.sort((o1, o2) -> {
+        
+        // 재생 횟수로 장르 오름차순 정렬
+        List<String> keySet1 = new ArrayList<>(map1.keySet());
+        keySet1.sort((o1,o2) -> map1.get(o2) - map1.get(o1)); 
+        
+        // 장르별 노래의 재생횟수 정리하기
+        Map<String, List<int[]>> map2 = new HashMap<>(); // int[0] : 인덱스, int[1] : 재생횟수
+        for(int i=0;i<genres.length;i++) {
+            String genre = genres[i];
+            List<int[]> value = map2.getOrDefault(genre, new ArrayList<>());
+            value.add(new int[]{i, plays[i]});
+            map2.put(genre, value);
+        }
+        
+        // 베스트 앨범
+        List<Integer> bestAlbum = new ArrayList<>();
+        
+        // 1. 속한 노래가 많이 재생된 장르를 먼저 수록합니다.
+        for(String key : keySet1) {
+            List<int[]> value = map2.get(key);
+            value.sort((o1,o2) -> {
+                // 3. 장르 내에서 재생 횟수가 같은 노래 중에서는 고유 번호가 낮은 노래를 먼저 수록합니다.
                 if(o1[1] == o2[1]) {
                     return o1[0] - o2[0];
                 }
-                else {
-                    return o2[1] - o1[1];
-                }
+                // 2. 장르 내에서 많이 재생된 노래를 먼저 수록합니다.
+                return o2[1] - o1[1];
             });
-            for(int i=0;i<genre_playes.size();i++) {
-                if(i==2) break;
-                result.add(genre_playes.get(i)[0]);
+            
+            // 2개 곡 뽑기
+            for(int i=0;i<2 && i<value.size();i++) {
+                bestAlbum.add(value.get(i)[0]);
             }
         }
-
-        return result.stream().mapToInt(Integer::intValue).toArray();
+        
+        return bestAlbum;
     }
 }
