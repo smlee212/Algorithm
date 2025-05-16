@@ -5,38 +5,31 @@ class Solution {
     // 2:20
     
     public int[] solution(String[] operations) {      
-        LinkedList<Integer> list = new LinkedList<>();
+        PriorityQueue<Integer> maxPq = new PriorityQueue<>(Collections.reverseOrder());
+        PriorityQueue<Integer> minPq = new PriorityQueue<>();        
         
         for(String op : operations) {
             String[] temp = op.split(" ");
             int num = Integer.parseInt(temp[1]);
             if(temp[0].equals("I")) {
-                int index = 0;
-                for(Integer item : list) {
-                    if(item < num) {
-                        index++;
-                    }
-                    else {
-                        break;
-                    }
-                }
-                list.add(index, num);
+                maxPq.add(num);
+                minPq.add(num);
             }
-            else if(!list.isEmpty()){
-                if(num < 0) {
-                    list.removeFirst();
-                }
-                else {
-                    list.removeLast();
-                }
+            else if(num > 0 && !maxPq.isEmpty()){
+                int max = maxPq.poll();
+                minPq.remove(max);
+            }
+            else if(num < 0 && !minPq.isEmpty()) {
+                int min = minPq.poll();
+                maxPq.remove(min);
             }
         }
         
-        if(list.isEmpty()) {
+        if(maxPq.isEmpty()) {
             return new int[]{0,0};
         }
         else {
-            return new int[]{list.get(list.size()-1), list.get(0)};
+            return new int[]{maxPq.poll(), minPq.poll()};
         }
     }
 }
