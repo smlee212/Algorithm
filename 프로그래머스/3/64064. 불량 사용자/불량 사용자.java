@@ -1,61 +1,75 @@
 import java.util.*;
 
+// 0701
 class Solution {
-    List<List<Integer>> guess_banned_user;
-    Set<String> set; 
+    
+    int n, m;
     boolean[] visited;
+    int[] selectArray;
+    Set<String> resultSet;
     
     public int solution(String[] user_id, String[] banned_id) {
-        guess_banned_user = new ArrayList<>();
+        n = user_id.length;
+        m = banned_id.length;
+        visited = new boolean[n];
+        selectArray = new int[m];
+        resultSet = new HashSet<>();
         
-        for(String bid : banned_id) {
-            List<Integer> list = new ArrayList<>();
-            for(int user_idx=0;user_idx<user_id.length;user_idx++) {
-                String uid = user_id[user_idx];
-                if(bid.length() != uid.length()) continue;
-                
-                boolean check = true;
-                for(int i=0;i<bid.length();i++) {
-                    if(bid.charAt(i) != uid.charAt(i) && bid.charAt(i) != '*') {
-                        check = false;
-                        break;
-                    }
-                }
-                
-                if(check) {
-                    list.add(user_idx);
-                }
-            }
-            guess_banned_user.add(list);
+        for(int i=0;i<n;i++) {
+            visited[i] = true;
+            selectArray[0] = i;
+            dfs(user_id, banned_id, 1);
+            visited[i] = false;
         }
         
-        set = new HashSet<>();
-        visited = new boolean[user_id.length];
-        
-        dfs(0, banned_id.length);     
-        
-        return set.size();
+        return resultSet.size();
     }
     
-    void dfs(int idx, int len) {
-        if(idx==len) {
-            StringBuilder result = new StringBuilder();
-            for(int i=0;i<visited.length;i++) {
-                if(visited[i]) {
-                    result.append(i);
-                }
-            }
-            set.add(result.toString());
+    void dfs(String[] user_id, String[] banned_id, int index) {
+        if(index == m) {
+            func(user_id, banned_id);
             return;
         }
         
-        List<Integer> list = guess_banned_user.get(idx);
-        for(Integer uid : list) {
-            if(!visited[uid]) {
-                visited[uid] = true;
-                dfs(idx+1, len);
-                visited[uid] = false;
+        for(int i=0;i<n;i++) {
+            if(!visited[i]) {
+                visited[i] = true;
+                selectArray[index] = i;
+                dfs(user_id, banned_id, index+1);
+                visited[i] = false;
             }
-        }        
+        }
+    }
+    
+    void func(String[] user_id, String[] banned_id) {        
+        for(int i=0;i<m;i++) {
+            if(!checkId(user_id[selectArray[i]], banned_id[i])) {
+                return;
+            }
+        }
+        String result = "";
+        for(int i=0;i<n;i++) {
+            result += visited[i] ? "1" : "0";
+        }
+        resultSet.add(result);
+    }
+    
+    boolean checkId(String userId, String bannedId) {
+        if(userId.length() != bannedId.length()) {
+            return false;
+        }
+        
+        for(int i=0;i<userId.length();i++) {
+            char u = userId.charAt(i);
+            char b = bannedId.charAt(i);
+            
+            if(b == '*' || u == b) {
+                continue;
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
     }
 }
