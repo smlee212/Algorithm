@@ -14,11 +14,34 @@ public class Main {
             System.out.println(0);
         }
         else {
-            int cnt = 0;
-            while (Integer.bitCount(n + cnt) > k) {
-                cnt++;
+            String number = Integer.toBinaryString(n);
+            int size = number.length();
+            int cnt1 = 0;
+            int lastIdx = -1;
+            for (int i = 0; i < number.length(); i++) {
+                if (number.charAt(i) == '1') {
+                    cnt1++;
+                    if (cnt1 == k) lastIdx = i;
+                }
             }
-            System.out.println(cnt);
+
+            // 1의 개수가 동일하거나 k보다 적을때
+            if (cnt1 <= k) {
+                System.out.println('0');
+            }
+            // 1의 개수가 넘쳐날 때
+            else {
+                StringBuilder temp = new StringBuilder();
+                for (int i = lastIdx + 1; i < size; i++) {
+                    if (number.charAt(i) == '1') {
+                        temp.append(0);
+                    } else {
+                        temp.append(1);
+                    }
+                }
+                int need = Integer.parseInt(temp.toString(), 2);
+                System.out.println(need + 1);
+            }
         }
     }
 }
