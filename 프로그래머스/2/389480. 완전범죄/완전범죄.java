@@ -19,14 +19,14 @@ class Solution {
             return;
         }
         
-        int key = now * 1000000 + sumA * 1000 + sumB;
+        // i번째 물건을 훔칠때 현재 상황을 메모이제이션
+        int key = now * 1000000 + sumA * 1000 + sumB; 
         if(set.contains(key)) {
             return;
         }
+        set.add(key);
         
         dfs(info, n, m, now+1, sumA + info[now][0], sumB, set);
-        dfs(info, n, m, now+1, sumA, sumB + info[now][1], set);
-        
-        set.add(key);
+        dfs(info, n, m, now+1, sumA, sumB + info[now][1], set);        
     }
 }
