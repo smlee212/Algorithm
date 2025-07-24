@@ -14,21 +14,21 @@ public class Main {
 
     private static void func() {
         Deque<int[]> dq = new ArrayDeque<>();
-        visited = new boolean[N+1][M+1][2];
+        visited = new boolean[2][N+1][M+1];
         int[] dy = {-1,0,1,0},
               dx = {0,1,0,-1};
 
-        dq.add(new int[]{1,1,0});
-        visited[1][1][0] = true;
+        dq.add(new int[]{0,1,1});
+        visited[0][1][1] = true;
 
         int cnt = 1;
         while(!dq.isEmpty()) {
             int size = dq.size();
             while(size-->0) {
                 int[] now = dq.poll();
-                int y = now[0];
-                int x = now[1];
-                int brokenCnt = now[2];
+                int brokenCnt = now[0];
+                int y = now[1];
+                int x = now[2];
 
                 if(y==N && x==M) {
                     System.out.println(cnt);
@@ -41,13 +41,13 @@ public class Main {
 
                     if(ny<=0||nx<=0||ny>N||nx>M) continue;
 
-                    if(map[ny][nx]==1 && brokenCnt==0 && !visited[ny][nx][1]) {
-                        visited[ny][nx][1] = true;
-                        dq.add(new int[]{ny,nx,1});
+                    if(map[ny][nx]==1 && brokenCnt==0 && !visited[1][ny][nx]) {
+                        visited[1][ny][nx] = true;
+                        dq.add(new int[]{1,ny,nx});
                     }
-                    else if(map[ny][nx]==0 && !visited[ny][nx][brokenCnt]) {
-                        visited[ny][nx][brokenCnt] = true;
-                        dq.add(new int[]{ny,nx,brokenCnt});
+                    else if(map[ny][nx]==0 && !visited[brokenCnt][ny][nx]) {
+                        visited[brokenCnt][ny][nx] = true;
+                        dq.add(new int[]{brokenCnt,ny,nx});
                     }
                 }
             }
